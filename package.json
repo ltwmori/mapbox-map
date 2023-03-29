@@ -3,7 +3,7 @@
   "version": "1.0.6",
   "description": "This is the template of Mapbox GL JS implementation for Water Services Providers.",
   "main": "build.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --open --hot --inline --mode development --config webpack.config.js",
