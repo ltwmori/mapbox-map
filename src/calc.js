@@ -125,8 +125,8 @@ function httpRequest(url) {
 function coord3857To4326(coord) {
   const e_value = 2.7182818284;
   const X = 20037508.34;
-  const lat3857 = coord[0];
-  const long3857 = coord[1];
+  const long3857 = coord[0];
+  const lat3857 = coord[1]; 
   //converting the longitute from epsg 3857 to 4326
   const long4326 = (long3857 * 180) / X;
   //converting the latitude from epsg 3857 to 4326 split in multiple lines for readability

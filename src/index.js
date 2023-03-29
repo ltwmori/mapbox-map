@@ -1,6 +1,5 @@
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import config from "./config";
 
 (() => {
@@ -71,13 +70,12 @@ import config from "./config";
     map.addControl(legendCtrl, "bottom-left");
   }
 
-
   map.on("load", () => {
     map.addSource("polygons", {
       type: "geojson",
-      data: "./map.geojson", // Replace with the path to your GeoJSON file
+      data: "../data.geojson", // Replace with the path to your GeoJSON file
     });
-  
+
     // Add a layer to the map to display the polygons
     map.addLayer({
       id: "polygons-layer",
@@ -89,39 +87,14 @@ import config from "./config";
       },
     });
   });
+  map.on("click", "polygons-layer", (e) => {
+    const feature = e.features[0];
+    const popup = new mapboxgl.Popup()
+      .setLngLat(e.lngLat)
+      .setHTML(
+        `<strong>${feature.properties.name}</strong><br>${feature.properties.description}`
+      )
+      .addTo(map);
+  });
 
-  // Load GeoJSON data
-//   fetch("./map.geojson")
-//     .then((response) => response.json())
-//     .then((data) => {
-//       // Add data to map
-//       map.addSource("polygons", {
-//         type: "geojson",
-//         data: data,
-//       });
-
-//       console.log(data);
-
-//       // Add layer to map
-//       map.addLayer({
-//         id: "polygons-layer",
-//         type: "fill",
-//         source: "polygons",
-//         paint: {
-//           "fill-color": "#FF0000",
-//           "fill-opacity": 0.5,
-//         },
-//       });
-
-//       // Show popup on click
-//       map.on("click", "polygons-layer", (e) => {
-//         const feature = e.features[0];
-//         const popup = new mapboxgl.Popup()
-//           .setLngLat(e.lngLat)
-//           .setHTML(
-//             `<strong>${feature.properties.name}</strong><br>${feature.properties.description}`
-//           )
-//           .addTo(map);
-//       });
-//     });
 })();
