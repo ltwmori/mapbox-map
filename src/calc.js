@@ -45,6 +45,38 @@ const kad_numbers = [
   "030550041310",
 ];
 
+
+function postRequest(url, data) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: "POST",
+      rejectUnauthorized: false,
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(data),
+      },
+    };
+
+    const req = https.request(url, options, (response) => {
+      if (response.statusCode < 200 || response.statusCode > 299) {
+        reject(
+          new Error(`Failed to load page, status code: ${response.statusCode}`)
+        );
+      }
+      const body = [];
+      response.on("data", (chunk) => body.push(chunk));
+      response.on("end", () => resolve(body.join("")));
+    });
+
+    req.on("error", (error) => {
+      reject(error);
+    });
+
+    req.write(data);
+    req.end();
+  });
+}
+
 async function getCoordinates() {
   try {
     for (let i = 0; i < kad_numbers.length; i++) {
@@ -52,7 +84,10 @@ async function getCoordinates() {
       const url = `https://aisgzk.kz/aisgzk/Proxy/aisgzkZem2/MapServer/find?f=json&searchText=${kad_number}&contains=true&returnGeometry=true&layers=59&searchFields=KAD_NOMER&sr=3857&returnM=true&transformForward=true&wkid=1241`;
       const response = await httpRequest(url);
       const responseData = JSON.parse(response);
-
+      const data = JSON.stringify({
+        //  payload data
+      });
+      const info =  await postRequest(`https://aisgzk.kz/aisgzk/Index/FindObjInfoForMap?kadNum=${kad_number}`, data);
       // convert to normal coordinates
       if (responseData.results && responseData.results.length > 0) {
         const ringsData = responseData.results[0].geometry.rings;
@@ -61,10 +96,8 @@ async function getCoordinates() {
             return coord3857To4326(coord);
           });
         });
-        // console.log(i, " ", rings);
-
-        // convert to geol-json
-        const stream = fs.createWriteStream("data.geojson", { flags: "a" });
+        
+        const stream = fs.createWriteStream("test.geojson", { flags: "a" });
         const geojson = {
           type: "FeatureCollection",
           features: [],
@@ -76,13 +109,13 @@ async function getCoordinates() {
               type: "Polygon",
               coordinates: [[]],
             },
-            properties: {},
+            properties: {info: info},
           };
           polygon.forEach((point) => {
             feature.geometry.coordinates[0].push([point.lng, point.lat]);
           });
           geojson.features.push(feature);
-          stream.write(JSON.stringify(feature) + "\n"); // Write feature to file
+          stream.write(JSON.stringify(feature) + ","); // Write feature to file
           // map.getSource(i).setData(geojson);
         });
         console.log(JSON.stringify(geojson));

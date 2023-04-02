@@ -1,18 +1,49 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8" />
-<title>Полигоны на карте</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-<link href='https://api.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.css' rel='stylesheet' />
-<style>
-    body { margin: 0; padding: 0; }
-    #map { position: absolute; top: 0; bottom: 0; width: 100%;z-index: 10;}
-</style>
-</head>
-    <body>
-        <div id="map"></div>
-        <script src='https://api.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.js'></script>
-        <script src="bundle.js"></script>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Полигоны на карте</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        z-index: 10;
+      }
+      .mapboxgl-popup-content {
+        width: 300px;
+        height: 300px;
+        overflow: auto;
+        border-radius: 20px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .mapboxgl-popup-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .mapboxgl-popup-content::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.js"></script>
+    <script src="bundle.js"></script>
+  </body>
 </html>
